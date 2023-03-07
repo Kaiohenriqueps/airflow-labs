@@ -10,7 +10,7 @@ from airflow.decorators import dag, task, task_group
 )
 def my_dag():
     @task
-    def test_1():
+    def test_0():
         my_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         chunk_size = 5
         list_chunked = [
@@ -18,24 +18,13 @@ def my_dag():
         ]
         return list_chunked
 
-    @task_group
-    def my_tg(my_list):
-        for i, list in enumerate(my_list):
-
-            @task(task_id=f"process_{i}")
-            def process(list, i):
-                for elem in list[i]:
-                    print(elem)
-
     @task
-    def test_2(my_list):
-        print(my_list)
+    def test(my_list: list, index: int):
+        print(my_list[index])
 
-    t1 = test_1()
-    mtg = my_tg(t1)
-    t2 = test_2()
-    t1 >> mtg >> t2
-    # t1 >> t2
+    t0 = test_0()
+    my_tasks = test.partial(my_list=t0).expand(index=[0, 1])
+    t0 >> my_tasks
 
 
 my_dag()
