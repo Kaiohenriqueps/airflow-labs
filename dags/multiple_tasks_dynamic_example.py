@@ -12,7 +12,7 @@ def split(my_list, n):
 
 
 @dag(
-    "task_group_example_dag",
+    "multiple_tasks_dynamic_example",
     start_date=datetime(2021, 12, 1),
     schedule="@daily",
     catchup=False,
