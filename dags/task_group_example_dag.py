@@ -1,6 +1,15 @@
 from datetime import datetime
 from airflow.decorators import dag, task, task_group
 
+number_of_batches = 5
+
+
+def split(my_list, n):
+    k, m = divmod(len(my_list), n)
+    return list(
+        (my_list[i * k + min(i, m) : (i + 1) * k + min(i + 1, m)] for i in range(n))
+    )
+
 
 @dag(
     "task_group_example_dag",
@@ -9,22 +18,22 @@ from airflow.decorators import dag, task, task_group
     catchup=False,
 )
 def my_dag():
-    @task
-    def test_0():
-        my_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        chunk_size = 5
-        list_chunked = [
-            my_list[i : i + chunk_size] for i in range(0, len(my_list), chunk_size)
-        ]
-        return list_chunked
+    @task(task_id="list")
+    def task_0():
+        return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-    @task
-    def test(my_list: list, index: int):
+    @task(task_id="split")
+    def task_1(my_list):
+        return split(my_list, number_of_batches)
+
+    @task(task_id="print")
+    def task_2(my_list: list, index: int):
         print(my_list[index])
 
-    t0 = test_0()
-    my_tasks = test.partial(my_list=t0).expand(index=[0, 1])
-    t0 >> my_tasks
+    t0 = task_0()
+    t1 = task_1(t0)
+    t2 = task_2.partial(my_list=t1).expand(index=list(range(0, number_of_batches)))
+    t0 >> t1 >> t2
 
 
 my_dag()
