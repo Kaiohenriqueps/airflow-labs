@@ -4,13 +4,6 @@ from airflow.decorators import dag, task, task_group
 number_of_batches = 5
 
 
-def split(my_list, n):
-    k, m = divmod(len(my_list), n)
-    return list(
-        (my_list[i * k + min(i, m) : (i + 1) * k + min(i + 1, m)] for i in range(n))
-    )
-
-
 @dag(
     "multiple_tasks_dynamic_example",
     start_date=datetime(2021, 12, 1),
@@ -24,6 +17,8 @@ def my_dag():
 
     @task(task_id="split")
     def task_1(my_list):
+        from utils.ops_list import split
+
         return split(my_list, number_of_batches)
 
     @task(task_id="print")
