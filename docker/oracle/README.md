@@ -1,0 +1,1 @@
+To run an Oracle database with Docker, I've just followed the instructions in this [website](https://collabnix.com/how-to-run-oracle-database-in-a-docker-container-using-docker-compose/).
