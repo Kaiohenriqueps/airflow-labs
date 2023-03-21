@@ -131,3 +131,6 @@ dmypy.json
 # Airflow
 airflow-data
 logs/
+
+# VSCode
+.vscode
