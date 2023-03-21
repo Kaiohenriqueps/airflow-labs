@@ -14,6 +14,7 @@ def my_dag():
         from airflow.providers.oracle.hooks.oracle import OracleHook
 
         hook = OracleHook(oracle_conn_id="oracle_conn_id")
+        print(hook.get_conn())
 
     task_0()
 
