@@ -9,8 +9,8 @@ services:
     ports:
       - 1521:1521
     volumes:
-      - oracle-data:/opt/oracle/oradata
-      - oracle-backup:/opt/oracle/backup
+      - ./oracle-data:/opt/oracle/oradata
+      - ./oracle-backup:/opt/oracle/backup
     healthcheck:
       test:
         [
